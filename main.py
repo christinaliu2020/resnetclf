@@ -104,24 +104,23 @@ class ResNetCIFAR10(pl.LightningModule):
 if __name__ == "__main__":
     # pl.seed_everything(42)
 
-    # Initialize Weights & Biases
+
     wandb.init(project="cifar10-classification")
     wandb_logger = WandbLogger(project="cifar10-classification")
-    # Load CIFAR-10 dataset
+
     transform = torchvision.transforms.Compose(
         [torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.5,), (0.5,))]
     )
     train_dataset = torchvision.datasets.CIFAR10(root="./data", train=True, download=True, transform=transform)
     val_dataset = torchvision.datasets.CIFAR10(root="./data", train=False, download=True, transform=transform)
 
-    # Create dataloaders
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=4)
 
-    # Initialize the model
+
     model = ResNetCIFAR10()
 
-    # Initialize the Trainer with the wandb logger
+
     trainer = pl.Trainer(num_nodes=1, max_epochs=50, logger=wandb_logger)
 
     # Train the model
